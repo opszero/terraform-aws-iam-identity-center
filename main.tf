@@ -37,12 +37,12 @@ resource "aws_identitystore_user" "this" {
   for_each = var.users
 
   identity_store_id = local.identity_store_id
-  display_name      = each.value.display_name
-  user_name         = each.value.email
+  display_name      = "${each.value.first_name} ${each.value.last_name}"
+  user_name         = each.key
 
   name {
-    family_name = each.value.family_name
-    given_name  = each.value.given_name
+    family_name = each.value.last_name
+    given_name  = each.value.first_name
   }
 }
 
