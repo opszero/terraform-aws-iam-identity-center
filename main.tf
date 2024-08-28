@@ -36,6 +36,10 @@ resource "aws_identitystore_user" "this" {
   display_name      = "${each.value.first_name} ${each.value.last_name}"
   user_name         = each.key
 
+  emails {
+    value = each.key
+  }
+
   name {
     family_name = each.value.last_name
     given_name  = each.value.first_name
