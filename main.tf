@@ -1,6 +1,6 @@
 locals {
-  instance_arn      = tolist(data.aws_ssoadmin_instances.example.arns)[0]
-  identity_store_id = tolist(data.aws_ssoadmin_instances.example.identity_store_ids)[0]
+  instance_arn      = tolist(data.aws_ssoadmin_instances.this.arns)[0]
+  identity_store_id = tolist(data.aws_ssoadmin_instances.this.identity_store_ids)[0]
 }
 
 data "aws_ssoadmin_instances" "this" {}
@@ -54,6 +54,6 @@ resource "aws_identitystore_group" "this" {
 
 resource "aws_identitystore_group_membership" "this" {
   identity_store_id = local.identity_store_id
-  group_id          = aws_identitystore_group.example.group_id
-  member_id         = aws_identitystore_user.example.user_id
+  group_id          = aws_identitystore_group.this.group_id
+  member_id         = aws_identitystore_user.this.user_id
 }
