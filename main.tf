@@ -37,7 +37,8 @@ resource "aws_identitystore_user" "this" {
   user_name         = each.key
 
   emails {
-    value = each.key
+    primary = true
+    value   = each.key
   }
 
   name {
