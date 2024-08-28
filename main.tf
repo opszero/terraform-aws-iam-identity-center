@@ -5,22 +5,18 @@ locals {
 
 data "aws_ssoadmin_instances" "this" {}
 
-data "aws_identitystore_group" "this" {
+# data "aws_ssoadmin_permission_set" "readonly" {
+#   instance_arn = local.instance_arn
+#   name         = "AWSReadOnlyAccess"
+# }
+
+resource "aws_identitystore_group" "this" {
+  for_each = var.groups
+
   identity_store_id = local.identity_store_id
-
-  alternate_identifier {
-    unique_attribute {
-      attribute_path  = "DisplayName"
-      attribute_value = "ExampleGroup"
-    }
-  }
+  display_name      = each.key
+  description       = each.value.description
 }
-
-data "aws_ssoadmin_permission_set" "readonly" {
-  instance_arn = local.instance_arn
-  name         = "AWSReadOnlyAccess"
-}
-
 
 resource "aws_ssoadmin_account_assignment" "this" {
   instance_arn       = local.instance_arn
@@ -44,12 +40,6 @@ resource "aws_identitystore_user" "this" {
     family_name = each.value.last_name
     given_name  = each.value.first_name
   }
-}
-
-resource "aws_identitystore_group" "this" {
-  identity_store_id = local.identity_store_id
-  display_name      = "MyGroup"
-  description       = "Some group name"
 }
 
 resource "aws_identitystore_group_membership" "this" {

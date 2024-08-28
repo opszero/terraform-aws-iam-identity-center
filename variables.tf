@@ -6,3 +6,9 @@ variable "users" {
     groups     = list(string)
   }))
 }
+
+variable "groups" {
+  type = map(object({
+    description = string
+  }))
+}
