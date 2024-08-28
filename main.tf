@@ -10,23 +10,23 @@ data "aws_ssoadmin_instances" "this" {}
 #   name         = "AWSReadOnlyAccess"
 # }
 
+# resource "aws_ssoadmin_account_assignment" "this" {
+#   instance_arn       = local.instance_arn
+#   permission_set_arn = data.aws_ssoadmin_permission_set.this.arn
+
+#   principal_id   = data.aws_identitystore_group.this.group_id
+#   principal_type = "GROUP"
+
+#   target_id   = "123456789012"
+#   target_type = "AWS_ACCOUNT"
+# }
+
 resource "aws_identitystore_group" "this" {
   for_each = var.groups
 
   identity_store_id = local.identity_store_id
   display_name      = each.key
   description       = each.value.description
-}
-
-resource "aws_ssoadmin_account_assignment" "this" {
-  instance_arn       = local.instance_arn
-  permission_set_arn = data.aws_ssoadmin_permission_set.this.arn
-
-  principal_id   = data.aws_identitystore_group.this.group_id
-  principal_type = "GROUP"
-
-  target_id   = "123456789012"
-  target_type = "AWS_ACCOUNT"
 }
 
 resource "aws_identitystore_user" "this" {
@@ -42,8 +42,8 @@ resource "aws_identitystore_user" "this" {
   }
 }
 
-resource "aws_identitystore_group_membership" "this" {
-  identity_store_id = local.identity_store_id
-  group_id          = aws_identitystore_group.this.group_id
-  member_id         = aws_identitystore_user.this.user_id
-}
+# resource "aws_identitystore_group_membership" "this" {
+#   identity_store_id = local.identity_store_id
+#   group_id          = aws_identitystore_group.this.group_id
+#   member_id         = aws_identitystore_user.this.user_id
+# }
