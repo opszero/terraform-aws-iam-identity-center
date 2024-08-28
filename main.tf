@@ -41,21 +41,13 @@ resource "aws_identitystore_user" "this" {
   }
 }
 
-# resource "aws_identitystore_group_membership" "this" {
-#   for_each          = { for group in var.groups : group => var.groups[group].users }
-#   identity_store_id = local.identity_store_id
-#   group_id          = aws_identitystore_group.this.group_id
-#   member_id         = aws_identitystore_user.this.user_id
-# }
-
-
 module "groups" {
   for_each = var.groups
   source   = "./group"
 
   identity_store_id = local.identity_store_id
   group             = each.key
-  users             = [for user, v in var.users : user if contains(lookup(v, "groups", []), each.key)]
+  users             = each.value.users
 
   depends_on = [aws_identitystore_user.this]
 }
