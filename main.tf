@@ -21,13 +21,7 @@ data "aws_ssoadmin_instances" "this" {}
 #   target_type = "AWS_ACCOUNT"
 # }
 
-resource "aws_identitystore_group" "this" {
-  for_each = var.groups
 
-  identity_store_id = local.identity_store_id
-  display_name      = each.key
-  description       = each.value.description
-}
 
 resource "aws_identitystore_user" "this" {
   for_each = var.users
@@ -48,7 +42,20 @@ resource "aws_identitystore_user" "this" {
 }
 
 # resource "aws_identitystore_group_membership" "this" {
+#   for_each          = { for group in var.groups : group => var.groups[group].users }
 #   identity_store_id = local.identity_store_id
 #   group_id          = aws_identitystore_group.this.group_id
 #   member_id         = aws_identitystore_user.this.user_id
 # }
+
+
+module "groups" {
+  for_each = var.groups
+  source   = "./group"
+
+  identity_store_id = local.identity_store_id
+  group             = each.key
+  users             = [for user, v in var.users : user if contains(lookup(v, "groups", []), each.key)]
+
+  depends_on = [aws_identitystore_user.this]
+}
