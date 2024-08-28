@@ -9,7 +9,7 @@
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_users"></a> [users](#input\_users) | n/a | <pre>map(object({<br>    email      = string<br>    first_name = string<br>    last_name  = string<br>  }))</pre> | n/a | yes |
+| <a name="input_users"></a> [users](#input\_users) | n/a | <pre>map(object({<br>    first_name = string<br>    last_name  = string<br>    groups     = list(string)<br>  }))</pre> | n/a | yes |
 ## Resources
 
 | Name | Type |
