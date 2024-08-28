@@ -17,7 +17,7 @@ resource "aws_identitystore_group" "this" {
 }
 
 data "aws_identitystore_user" "this" {
-  for_each = var.users
+  for_each = toset(var.users)
 
   identity_store_id = var.identity_store_id
 
