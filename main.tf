@@ -41,6 +41,18 @@ resource "aws_identitystore_user" "this" {
   }
 }
 
+resource "aws_organizations_account" "this" {
+  for_each = { for acc in var.accounts : acc.name => acc if acc.enabled != false }
+
+  name                       = each.value.name
+  email                      = each.value.email
+  close_on_deletion          = lookup(each.value, "close_on_deletion", false)
+  create_govcloud            = lookup(each.value, "create_govcloud", false)
+  iam_user_access_to_billing = lookup(each.value, "iam_user_access_to_billing", "ALLOW")
+  role_name                  = lookup(each.value, "role_name", null)
+  tags                       = lookup(each.value, "tags", {})
+}
+
 module "groups" {
   for_each = var.groups
   source   = "./group"
