@@ -325,7 +325,7 @@ resource  "aws_ssoadmin_instance_access_control_attributes" "sso_access_control_
   dynamic "attribute" {
     for_each = var.sso_instance_access_control_attributes
     content {
-      key   = attribute.key
+      key   = attribute.value.attribute_name
       value {
         source = attribute.value.source
       }
